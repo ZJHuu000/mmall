@@ -14,9 +14,10 @@ import com.wust.service.IUserService;
 import com.wust.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
-
+@Service
 public class UserServiceImpl implements IUserService {
     @Autowired
     private UserMapper userMapper;
@@ -61,7 +62,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ServerResponse<String> checkValid(String str,String type){
-        if(StringUtils.isBlank(type)){
+        if(StringUtils.isNotBlank(type)){
             //开始校验
             if(Const.USERNAME.equals(type)){
                 int resultCount=userMapper.checkUsername(str);
@@ -89,7 +90,7 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("用户不存在！");
         }
         String question=userMapper.selectQuestionByUsername(username);
-        if(StringUtils.isBlank(question)){
+        if(StringUtils.isNotBlank(question)){
             return ServerResponse.createBySuccess(question);
         }
         return ServerResponse.createByErrorMessage("返回的密码是错误的！");
@@ -174,6 +175,4 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
     }
-
-
 }
